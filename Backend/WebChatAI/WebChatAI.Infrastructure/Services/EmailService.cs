@@ -209,7 +209,7 @@ public class EmailService : IEmailService
         var loginLink = $"{baseUrl}/login";
         var resetLink = $"{baseUrl}/forgot-password";
         var changedAtUtc = DateTime.UtcNow.ToString("dd.MM.yyyy HH:mm:ss 'UTC'");
-        const string supportEmail = "apaydinyasar0@gmail.com";
+        var supportEmail = !string.IsNullOrWhiteSpace(_options.FromEmail) ? _options.FromEmail : (!string.IsNullOrWhiteSpace(_options.SmtpUser) ? _options.SmtpUser : "support@devpilot.ai");
 
         var htmlBody = $$"""
 <!DOCTYPE html>
@@ -364,7 +364,7 @@ public class EmailService : IEmailService
             : (!string.IsNullOrWhiteSpace(_options.FrontendBaseUrl) ? _options.FrontendBaseUrl.TrimEnd('/') : "http://localhost:3000");
 
         var appLink = $"{baseUrl}/app";
-        const string founderEmail = "apaydinyasar0@gmail.com";
+        var founderEmail = !string.IsNullOrWhiteSpace(_options.FromEmail) ? _options.FromEmail : (!string.IsNullOrWhiteSpace(_options.SmtpUser) ? _options.SmtpUser : "founder@devpilot.ai");
 
         var htmlBody = $$"""
 <!DOCTYPE html>
@@ -665,7 +665,7 @@ public class EmailService : IEmailService
         var cleanSenderName = string.IsNullOrWhiteSpace(senderName) ? "DevPilot Kullanıcısı" : senderName.Trim();
         var cleanCategory = string.IsNullOrWhiteSpace(category) ? "Kullanıcı Görüşü" : category.Trim();
         var safeMessage = WebUtility.HtmlEncode(message ?? string.Empty).Replace("\n", "<br/>");
-        const string recipientEmail = "apaydinyasar0@gmail.com";
+        var recipientEmail = !string.IsNullOrWhiteSpace(_options.FromEmail) ? _options.FromEmail : (!string.IsNullOrWhiteSpace(_options.SmtpUser) ? _options.SmtpUser : "feedback@devpilot.ai");
 
         var (badgeColor, badgeBg) = cleanCategory.ToLowerInvariant() switch
         {
@@ -852,7 +852,7 @@ public class EmailService : IEmailService
         string email,
         CancellationToken cancellationToken = default)
     {
-        const string adminEmail = "apaydinyasar0@gmail.com";
+        var adminEmail = !string.IsNullOrWhiteSpace(_options.FromEmail) ? _options.FromEmail : (!string.IsNullOrWhiteSpace(_options.SmtpUser) ? _options.SmtpUser : "admin@devpilot.ai");
         var fullName = $"{firstName} {lastName}".Trim();
         var registeredAtUtc = DateTime.UtcNow.ToString("dd.MM.yyyy HH:mm:ss 'UTC'");
 

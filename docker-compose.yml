@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-ai_agent_db}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Postgres123!}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       # Securely bind to localhost port 5433 to avoid conflict with host-installed PostgreSQL (port 5432)
       - "127.0.0.1:5433:5432"
@@ -34,13 +34,13 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
       ASPNETCORE_URLS: http://+:5000
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-ai_agent_db};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-Postgres123!}
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-ai_agent_db};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
       Jwt__Issuer: DevPilotAI
       Jwt__Audience: DevPilotAIUsers
-      Jwt__SecretKey: ${JWT_SECRET_KEY:-devpilot_local_jwt_secret_signing_key_32bytes_long_2026!}
+      Jwt__SecretKey: ${JWT_SECRET_KEY}
       Jwt__AccessTokenExpirationMinutes: 60
       Jwt__RefreshTokenExpirationDays: 7
-      Encryption__ApiKeySecret: ${ENCRYPTION_API_KEY_SECRET:-devpilot_default_local_encryption_key_32chars!}
+      Encryption__ApiKeySecret: ${ENCRYPTION_API_KEY_SECRET}
       EmailSettings__FrontendBaseUrl: ${FRONTEND_BASE_URL:-http://localhost:3000}
       EmailSettings__SmtpHost: ${SMTP_HOST:-smtp.gmail.com}
       EmailSettings__SmtpPort: ${SMTP_PORT:-587}
