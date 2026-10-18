@@ -15,7 +15,6 @@
   <a href="#-özellikler"><img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" /></a>
   <a href="#-özellikler"><img src="https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" /></a>
   <a href="#-testler"><img src="https://img.shields.io/badge/Tests-147%20Passed-brightgreen?style=for-the-badge" alt="Tests 147 Passed" /></a>
-  <a href="#-lisans"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License" /></a>
 </p>
 
 ---
