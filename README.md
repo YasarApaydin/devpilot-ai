@@ -212,6 +212,4 @@ DevPilot AI/
 
 ---
 
-## 📄 Lisans
 
-Bu proje [MIT Lisansı](LICENSE) kapsamında lisanslanmıştır. Detaylar için lisans dosyasını inceleyebilirsiniz.
