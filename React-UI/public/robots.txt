@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Allow: /verify-email
+Allow: /forgot-password
+Allow: /reset-password
+Disallow: /app/
+Disallow: /api/
+
+Sitemap: https://devpilot.ai/sitemap.xml

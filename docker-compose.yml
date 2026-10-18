@@ -1,0 +1,97 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: devpilot-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ai_agent_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Postgres123!}
+    ports:
+      # Securely bind to localhost port 5433 to avoid conflict with host-installed PostgreSQL (port 5432)
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-ai_agent_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - devpilot-net
+
+  backend:
+    build:
+      context: ./Backend/WebChatAI
+      dockerfile: Dockerfile
+    container_name: devpilot-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: http://+:5000
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-ai_agent_db};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-Postgres123!}
+      Jwt__Issuer: DevPilotAI
+      Jwt__Audience: DevPilotAIUsers
+      Jwt__SecretKey: ${JWT_SECRET_KEY:-devpilot_local_jwt_secret_signing_key_32bytes_long_2026!}
+      Jwt__AccessTokenExpirationMinutes: 60
+      Jwt__RefreshTokenExpirationDays: 7
+      Encryption__ApiKeySecret: ${ENCRYPTION_API_KEY_SECRET:-devpilot_default_local_encryption_key_32chars!}
+      EmailSettings__FrontendBaseUrl: ${FRONTEND_BASE_URL:-http://localhost:3000}
+      EmailSettings__SmtpHost: ${SMTP_HOST:-smtp.gmail.com}
+      EmailSettings__SmtpPort: ${SMTP_PORT:-587}
+      EmailSettings__SmtpUser: ${SMTP_USER:-}
+      EmailSettings__SmtpPassword: ${SMTP_PASSWORD:-}
+      EmailSettings__FromEmail: ${SMTP_FROM_EMAIL:-}
+      EmailSettings__FromName: ${SMTP_FROM_NAME:-DevPilot AI}
+      EmailSettings__EnableSsl: ${SMTP_ENABLE_SSL:-true}
+      Frontend__AllowedOrigins: ${FRONTEND_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173}
+      Groq__ApiKey: ${GROQ_API_KEY:-}
+      Groq__Model: ${GROQ_MODEL:-openai/gpt-oss-120b}
+      Tavily__ApiKey: ${TAVILY_API_KEY:-}
+      Strix__Executable: embedded
+      Strix__ProjectPath: embedded
+      Strix__WorkingDirectory: embedded
+      Strix__TimeoutMinutes: 15
+      Strix__DefaultScanMode: quick
+      Strix__EnableDiagnosticsFallback: "true"
+      Strix__LlmModel: ${STRIX_LLM:-qwen2.5-coder:latest}
+      Strix__OllamaEndpoint: ${OLLAMA_ENDPOINT:-http://host.docker.internal:11434}
+      Strix__LlmApiBase: ${OLLAMA_ENDPOINT:-http://host.docker.internal:11434}
+      STRIX_LLM: ${STRIX_LLM:-qwen2.5-coder:latest}
+      LLM_API_KEY: ${LLM_API_KEY:-ollama}
+      LLM_API_BASE: ${OLLAMA_ENDPOINT:-http://host.docker.internal:11434}
+    ports:
+      - "5000:5000"
+    networks:
+      - devpilot-net
+
+  frontend:
+    build:
+      context: ./React-UI
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+        VITE_APP_NAME: "DevPilot AI"
+        VITE_ENABLE_MOCK_FALLBACK: "false"
+    container_name: devpilot-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - devpilot-net
+
+volumes:
+  postgres_data:
+    name: devpilot_postgres_data
+
+networks:
+  devpilot-net:
+    name: devpilot-net
+    driver: bridge

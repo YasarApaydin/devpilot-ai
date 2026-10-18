@@ -1,0 +1,6 @@
+@WebChatAI.WebApı_HostAddress = http://localhost:5160
+
+GET {{WebChatAI.WebApı_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

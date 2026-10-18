@@ -1,0 +1,70 @@
+# ==============================================================================
+# DevPilot AI - Global .gitignore
+# ==============================================================================
+
+# --- Environment & Sensitive Secret Files ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.pfx
+*.cert
+appsettings.Production.json
+appsettings.Local.json
+appsettings.json
+
+# Keep environment example template
+!.env.example
+
+# --- .NET & Visual Studio / VS Code ---
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+publish/
+*.user
+*.userprefs
+*.suo
+*.sln.docstates
+.vs/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# --- Node.js & React Frontend ---
+node_modules/
+React-UI/node_modules/
+dist/
+React-UI/dist/
+.vite/
+React-UI/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Testing & Code Coverage ---
+TestResults/
+coverage/
+*.trx
+*.coverage
+*.opencover.xml
+
+# --- Database & Persistent Storage ---
+postgres_data/
+*.sqlite
+*.sqlite-journal
+*.db
+
+# --- Logs & Temp Files ---
+*.log
+*.tmp
+logs/
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
